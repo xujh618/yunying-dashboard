@@ -6,9 +6,9 @@ const fs = require('fs');
 const { createClient } = require('@supabase/supabase-js');
 const XLSX = require('xlsx');
 
-// 配置Supabase客户端 - 从环境变量中读取配置
-const supabaseUrl = process.env.SUPABASE_URL || 'https://oogkyuxkxksvzzhuagnw.supabase.co';
-const supabaseKey = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vZ2t5dXhreGtzdnp6aHVhZ253Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDY2NTg0NywiZXhwIjoyMDgwMjQxODQ3fQ.2Uoi9rBbq3CVyzz4-h9tTrmCC5YHoVL_aPLXfn6I08I';
+// 配置Supabase客户端 - 更新为新的数据库信息
+const supabaseUrl = 'https://oogkyuxkxksvzzhuagnw.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vZ2t5dXhreGtzdnp6aHVhZ253Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDY2NTg0NywiZXhwIjoyMDgwMjQxODQ3fQ.2Uoi9rBbq3CVyzz4-h9tTrmCC5YHoVL_aPLXfn6I08I';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 配置Express服务器
