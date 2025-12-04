@@ -178,4 +178,29 @@ const MaterialPricePage = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead>
               <tr>
-                <th className="
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">月份</th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">访问量</th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">注册量</th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">订单量</th>
+                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">营收金额</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {data.map((item, index) => (
+                <tr key={index}>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.month}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.visit_count}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.register_count}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.order_count}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">¥{item.revenue.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MaterialPricePage;
