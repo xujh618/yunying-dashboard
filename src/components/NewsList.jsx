@@ -1,30 +1,61 @@
 import React from 'react';
-import DataTable from './DataTable';
-import { format } from 'date-fns';
+import { Table, Button, Tag } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-const NewsList = ({ news, onDelete }) => {
+const NewsList = ({ data, onEdit, onDelete }) => {
   const columns = [
-    { key: 'id', label: 'ID' },
-    { key: 'title', label: '标题' },
-    { key: 'author', label: '作者' },
     {
-      key: 'create_time',
-      label: '创建时间',
-      render: (value) => format(new Date(value), 'yyyy-MM-dd HH:mm')
+      title: '标题',
+      dataIndex: 'title',
+      key: 'title',
     },
-    { key: 'status', label: '状态' }
+    {
+      title: '分类',
+      dataIndex: 'category',
+      key: 'category',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => (
+        <Tag color={status === 'published' ? 'green' : 'blue'}>
+          {status === 'published' ? '已发布' : '草稿'}
+        </Tag>
+      ),
+    },
+    {
+      title: '发布时间',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_, record) => (
+        <>
+          <Button
+            type="link"
+            icon={<EditOutlined />}
+            onClick={() => onEdit(record)}
+            className="mr-2"
+          >
+            编辑
+          </Button>
+          <Button
+            type="link"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => onDelete(record.id)}
+          >
+            删除
+          </Button>
+        </>
+      ),
+    },
   ];
 
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">新闻列表</h2>
-      <DataTable
-        columns={columns}
-        data={news}
-        onDelete={onDelete}
-      />
-    </div>
-  );
+  return <Table columns={columns} dataSource={data} rowKey="id" />;
 };
 
 export default NewsList;

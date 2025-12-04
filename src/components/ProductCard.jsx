@@ -1,32 +1,22 @@
 import React from 'react';
+import { Card, Button } from 'antd';
+import { ArrowRightOutlined } from '@ant-design/icons';
+
+const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="h-48 bg-gray-200 flex items-center justify-center">
-        <img 
-          src={product.image} 
-          alt={product.title} 
-          className="max-h-full max-w-full object-contain"
-        />
-      </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
-        <p className="text-gray-600 text-sm mb-4">{product.description}</p>
-        <div className="flex justify-between items-center">
-          <div className="text-sm">
-            <span className="font-medium">访问量：</span>
-            <span>{product.visitCount}</span>
-          </div>
-          <a 
-            href={product.link} 
-            className="text-blue-600 hover:text-blue-800"
-          >
-            查看详情 →
-          </a>
-        </div>
-      </div>
-    </div>
+    <Card
+      hoverable
+      cover={<img alt={product.name} src={product.image || 'https://via.placeholder.com/300x200'} />}
+      actions={[
+        <Button type="primary" icon={<ArrowRightOutlined />}>
+          了解更多
+        </Button>,
+      ]}
+    >
+      <Meta title={product.name} description={product.description} />
+    </Card>
   );
 };
 

@@ -1,90 +1,93 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Card, Row, Col, Button, Table, Modal, Form, Input, Select } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import NewsForm from '../components/NewsForm';
 import NewsList from '../components/NewsList';
-import supabase from '../utils/supabase';
+
+const { Option } = Select;
 
 const AdminNewsPage = () => {
-  const [news, setNews] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [form] = Form.useForm();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState(null);
 
-  useEffect(() => {
-    fetchNews();
-  }, []);
+  const newsData = [
+    {
+      id: 1,
+      title: '平台升级公告',
+      content: '平台将于近期进行系统升级，升级期间可能会出现短暂的服务中断，敬请谅解。',
+      category: '公告',
+      status: 'published',
+      createdAt: '2024-01-15',
+    },
+    {
+      id: 2,
+      title: '新功能上线',
+      content: '材价库新增数据导出功能，用户可以将数据导出为Excel格式。',
+      category: '功能',
+      status: 'published',
+      createdAt: '2024-01-10',
+    },
+  ];
 
-  const fetchNews = async () => {
-    try {
-      setIsLoading(true);
-      const { data, error } = await supabase
-        .from('news')
-        .select('*')
-        .order('create_time', { ascending: false });
-
-      if (error) {
-        throw error;
-      }
-
-      setNews(data || []);
-    } catch (error) {
-      console.error('获取新闻列表失败:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleAdd = () => {
+    setIsEdit(false);
+    setCurrentRecord(null);
+    form.resetFields();
+    setModalVisible(true);
   };
 
-  const handleCreateNews = async (newsData) => {
-    try {
-      const { data, error } = await supabase
-        .from('news')
-        .insert(newsData)
-        .select('*')
-        .single();
-
-      if (error) {
-        throw error;
-      }
-
-      setNews([data, ...news]);
-    } catch (error) {
-      console.error('创建新闻失败:', error);
-      throw error;
-    }
+  const handleEdit = (record) => {
+    setIsEdit(true);
+    setCurrentRecord(record);
+    form.setFieldsValue(record);
+    setModalVisible(true);
   };
 
-  const handleDeleteNews = async (newsItem) => {
-    try {
-      const { error } = await supabase
-        .from('news')
-        .delete()
-        .eq('id', newsItem.id);
+  const handleDelete = (id) => {
+    console.log('Delete news:', id);
+  };
 
-      if (error) {
-        throw error;
-      }
-
-      setNews(news.filter(item => item.id !== newsItem.id));
-    } catch (error) {
-      console.error('删除新闻失败:', error);
-      alert('删除失败，请稍后重试');
-    }
+  const handleSubmit = (values) => {
+    console.log('Submit news:', values);
+    setModalVisible(false);
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">新闻管理</h1>
+    <div className="content">
+      <h2 className="text-2xl font-bold mb-4">资讯管理</h2>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <NewsForm onSubmit={handleCreateNews} />
-        </div>
-        
-        <div className="lg:col-span-2">
-          {isLoading ? (
-            <div className="text-center py-8">加载中...</div>
-          ) : (
-            <NewsList news={news} onDelete={handleDeleteNews} />
-          )}
-        </div>
+      <div className="flex justify-end mb-4">
+        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+          发布资讯
+        </Button>
       </div>
+
+      <Row gutter={[16, 16]}>
+        <Col span={24}>
+          <Card>
+            <NewsList
+              data={newsData}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Modal
+        title={isEdit ? '编辑资讯' : '发布资讯'}
+        open={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={null}
+      >
+        <NewsForm
+          form={form}
+          onSubmit={handleSubmit}
+          onCancel={() => setModalVisible(false)}
+        />
+      </Modal>
     </div>
   );
 };

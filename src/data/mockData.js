@@ -1,29 +1,47 @@
-// 新闻数据
-export const getNewsData = () => {
-  return [
+const platformData = {
+  products: [
     {
       id: 1,
-      title: "广咨智采平台正式上线",
-      content: "广咨智采平台是一款专注于政府采购的智能化采购平台，旨在提供高效、透明、合规的采购服务。",
-      author: "admin",
-      create_time: "2024-01-15T10:30:00",
-      status: "published"
+      name: '数字智库',
+      description: '提供行业报告、数据分析、趋势预测等服务，帮助企业做出数据驱动的决策。',
+      image: 'https://via.placeholder.com/300x200?text=数字智库',
     },
     {
       id: 2,
-      title: "数字智库平台更新公告",
-      content: "数字智库平台将于近期进行系统更新，更新内容包括UI界面优化、功能增强等。",
-      author: "admin",
-      create_time: "2024-01-10T14:20:00",
-      status: "published"
+      name: '广告智采',
+      description: '智能化广告采购平台，提供广告投放、效果监测、数据分析等功能。',
+      image: 'https://via.placeholder.com/300x200?text=广告智采',
     },
     {
       id: 3,
-      title: "材价库数据更新通知",
-      content: "材价库已完成2024年1月份的材料价格数据更新，欢迎广大用户查询使用。",
-      author: "admin",
-      create_time: "2024-01-05T09:15:00",
-      status: "published"
-    }
-  ];
+      name: '材价库',
+      description: '实时更新各类材料价格信息，提供价格查询、趋势分析、数据导出等服务。',
+      image: 'https://via.placeholder.com/300x200?text=材价库',
+    },
+  ],
+  operationData: {
+    monthlySales: [
+      { name: '1月', value: 1200 },
+      { name: '2月', value: 1900 },
+      { name: '3月', value: 3000 },
+      { name: '4月', value: 2500 },
+      { name: '5月', value: 2700 },
+      { name: '6月', value: 3800 },
+    ],
+    userGrowth: [
+      { name: '1月', value: 800 },
+      { name: '2月', value: 1500 },
+      { name: '3月', value: 2000 },
+      { name: '4月', value: 1800 },
+      { name: '5月', value: 2200 },
+      { name: '6月', value: 3000 },
+    ],
+    businessDistribution: [
+      { type: '数字智库', value: 35 },
+      { type: '广告智采', value: 45 },
+      { type: '材价库', value: 20 },
+    ],
+  },
 };
+
+export default platformData;

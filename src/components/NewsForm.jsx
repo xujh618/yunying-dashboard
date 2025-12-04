@@ -1,93 +1,60 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Form, Input, Select, Button } from 'antd';
 
-const NewsForm = ({ onSubmit, initialData = {}, buttonText = '创建新闻' }) => {
-  const [title, setTitle] = useState(initialData.title || '');
-  const [content, setContent] = useState(initialData.content || '');
-  const [author, setAuthor] = useState(initialData.author || 'admin');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+const { TextArea } = Input;
+const { Option } = Select;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!title.trim() || !content.trim()) {
-      setError('标题和内容不能为空');
-      return;
-    }
-
-    setIsSubmitting(true);
-    setError('');
-
-    try {
-      await onSubmit({ title, content, author });
-      // 重置表单
-      setTitle('');
-      setContent('');
-      setAuthor('admin');
-    } catch (err) {
-      setError(err.message || '操作失败，请稍后重试');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
+const NewsForm = ({ form, onSubmit, onCancel }) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">{initialData.id ? '编辑新闻' : '创建新闻'}</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="title" className="form-label">标题</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="form-input"
-            placeholder="请输入新闻标题"
-            disabled={isSubmitting}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="content" className="form-label">内容</label>
-          <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="form-input h-40"
-            placeholder="请输入新闻内容"
-            disabled={isSubmitting}
-          ></textarea>
-        </div>
-
-        <div>
-          <label htmlFor="author" className="form-label">作者</label>
-          <input
-            type="text"
-            id="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            className="form-input"
-            placeholder="请输入作者名称"
-            disabled={isSubmitting}
-          />
-        </div>
-
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {error}
-          </div>
-        )}
-
-        <button
-          type="submit"
-          className="btn-primary"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? '提交中...' : buttonText}
-        </button>
-      </form>
-    </div>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={onSubmit}
+    >
+      <Form.Item
+        name="title"
+        label="标题"
+        rules={[{ required: true, message: '请输入标题' }]}
+      >
+        <Input placeholder="请输入标题" />
+      </Form.Item>
+      <Form.Item
+        name="category"
+        label="分类"
+        rules={[{ required: true, message: '请选择分类' }]}
+      >
+        <Select placeholder="请选择分类">
+          <Option value="公告">公告</Option>
+          <Option value="功能">功能</Option>
+          <Option value="活动">活动</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name="content"
+        label="内容"
+        rules={[{ required: true, message: '请输入内容' }]}
+      >
+        <TextArea rows={6} placeholder="请输入内容" />
+      </Form.Item>
+      <Form.Item
+        name="status"
+        label="状态"
+        rules={[{ required: true, message: '请选择状态' }]}
+      >
+        <Select placeholder="请选择状态">
+          <Option value="published">已发布</Option>
+          <Option value="draft">草稿</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item className="flex justify-end">
+        <Button onClick={onCancel} className="mr-2">
+          取消
+        </Button>
+        <Button type="primary" htmlType="submit">
+          提交
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
