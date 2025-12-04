@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DataCard from '../components/DataCard';
 import PlatformChart from '../components/PlatformChart';
 import supabase from '../utils/supabase';
-import { format, subMonths, startOfMonth, endOfMonth } from 'date-fns';
+import { format, subMonths, addMonths, startOfMonth, endOfMonth } from 'date-fns';
 
 const DigitalLibraryPage = () => {
   const [data, setData] = useState([]);
@@ -97,13 +97,6 @@ const DigitalLibraryPage = () => {
         }
       ]
     });
-  };
-
-  // 添加缺失的addMonths函数
-  const addMonths = (date, months) => {
-    const result = new Date(date);
-    result.setMonth(result.getMonth() + months);
-    return result;
   };
 
   if (isLoading) {
