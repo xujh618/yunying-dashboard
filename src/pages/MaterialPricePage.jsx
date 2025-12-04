@@ -4,6 +4,7 @@ import { Bar, Line, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import DataCard from '../components/DataCard';
 import MonthRangeSelector from '../components/MonthRangeSelector';
+import supabase from '../utils/supabase';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend, ArcElement);
 
@@ -15,16 +16,21 @@ const MaterialPricePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 从后端API获取材价库数据
+    // 从Supabase获取材价库数据
     const fetchMaterialPriceData = async () => {
       setLoading(true);
       try {
-        // 获取所有相关数据
-        const [monthlyTrend, monthlyCore, departmentVisits] = await Promise.all([
-          fetch(`http://localhost:3002/api/data/material-price/monthly-trend`).then(res => res.json()),
-          fetch(`http://localhost:3002/api/data/material-price/monthly-core`).then(res => res.json()),
-          fetch(`http://localhost:3002/api/data/material-price/department-visits`).then(res => res.json())
+        // 从Supabase获取所有相关数据
+        const [monthlyTrendResult, monthlyCoreResult, departmentVisitsResult] = await Promise.all([
+          supabase.from('material_price_monthly_trend').select('*'),
+          supabase.from('material_price_monthly_core').select('*'),
+          supabase.from('material_price_department_visits').select('*')
         ]);
+
+        // 提取数据
+        const monthlyTrend = monthlyTrendResult.data || [];
+        const monthlyCore = monthlyCoreResult.data || [];
+        const departmentVisits = departmentVisitsResult.data || [];
 
         // 根据选中的月份筛选数据或加总所有数据
         const filterData = (data) => {

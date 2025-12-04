@@ -5,6 +5,7 @@ import DataCard from '../components/DataCard';
 import PlatformChart from '../components/PlatformChart';
 import ProductCard from '../components/ProductCard';
 import MonthRangeSelector from '../components/MonthRangeSelector';
+import supabase from '../utils/supabase';
 
 const HomePage = () => {
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -13,16 +14,21 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 从后端API获取首页数据
+    // 从Supabase获取首页数据
     const fetchHomepageData = async () => {
       setLoading(true);
       try {
-        // 获取所有产品的月度访问趋势数据
-        const [digitalLibraryData, smartProcurementData, materialPriceData] = await Promise.all([
-          fetch(`http://localhost:3002/api/data/digital-library/monthly-trend`).then(res => res.json()),
-          fetch(`http://localhost:3002/api/data/smart-procurement/monthly-trend`).then(res => res.json()),
-          fetch(`http://localhost:3002/api/data/material-price/monthly-trend`).then(res => res.json())
+        // 从Supabase获取所有产品的月度访问趋势数据
+        const [digitalLibraryResult, smartProcurementResult, materialPriceResult] = await Promise.all([
+          supabase.from('digital_library_monthly_trend').select('*'),
+          supabase.from('smart_procurement_monthly_trend').select('*'),
+          supabase.from('material_price_monthly_trend').select('*')
         ]);
+
+        // 提取数据
+        const digitalLibraryData = digitalLibraryResult.data || [];
+        const smartProcurementData = smartProcurementResult.data || [];
+        const materialPriceData = materialPriceResult.data || [];
 
         // 计算总计
         let totalVisits = 0;

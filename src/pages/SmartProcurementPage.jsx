@@ -4,6 +4,7 @@ import { Chart } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
 import DataCard from '../components/DataCard';
 import MonthRangeSelector from '../components/MonthRangeSelector';
+import supabase from '../utils/supabase';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
@@ -14,15 +15,19 @@ const SmartProcurementPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 从后端API获取广咨智采数据
+    // 从Supabase获取广咨智采数据
     const fetchSmartProcurementData = async () => {
       setLoading(true);
       try {
-        // 获取所有相关数据
-        const [monthlyTrend, monthlyUsers] = await Promise.all([
-          fetch(`http://localhost:3002/api/data/smart-procurement/monthly-trend`).then(res => res.json()),
-          fetch(`http://localhost:3002/api/data/smart-procurement/monthly-users`).then(res => res.json())
+        // 从Supabase获取所有相关数据
+        const [monthlyTrendResult, monthlyUsersResult] = await Promise.all([
+          supabase.from('smart_procurement_monthly_trend').select('*'),
+          supabase.from('smart_procurement_monthly_users').select('*')
         ]);
+
+        // 提取数据
+        const monthlyTrend = monthlyTrendResult.data || [];
+        const monthlyUsers = monthlyUsersResult.data || [];
 
         // 根据选中的月份筛选数据或加总所有数据
         const filterData = (data) => {

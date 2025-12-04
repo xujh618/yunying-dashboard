@@ -4,6 +4,7 @@ import { Bar, Pie, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import DataCard from '../components/DataCard';
 import MonthRangeSelector from '../components/MonthRangeSelector';
+import supabase from '../utils/supabase';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend, ArcElement);
 
@@ -18,16 +19,21 @@ const DigitalLibraryPage = () => {
   const [monthlyTrendData, setMonthlyTrendData] = useState(null); // 保存原始月度趋势数据
 
   useEffect(() => {
-    // 从后端API获取数字智库数据
+    // 从Supabase获取数字智库数据
     const fetchDigitalLibraryData = async () => {
       setLoading(true);
       try {
-        // 获取所有相关数据
-        const [monthlyTrend, featureUsage, departmentVisits] = await Promise.all([
-          fetch(`http://localhost:3002/api/data/digital-library/monthly-trend`).then(res => res.json()),
-          fetch(`http://localhost:3002/api/data/digital-library/feature-usage`).then(res => res.json()),
-          fetch(`http://localhost:3002/api/data/digital-library/department-visits`).then(res => res.json())
+        // 从Supabase获取所有相关数据
+        const [monthlyTrendResult, featureUsageResult, departmentVisitsResult] = await Promise.all([
+          supabase.from('digital_library_monthly_trend').select('*'),
+          supabase.from('digital_library_feature_usage').select('*'),
+          supabase.from('digital_library_department_visits').select('*')
         ]);
+
+        // 提取数据
+        const monthlyTrend = monthlyTrendResult.data || [];
+        const featureUsage = featureUsageResult.data || [];
+        const departmentVisits = departmentVisitsResult.data || [];
 
         // 保存原始月度趋势数据，用于绘制趋势图
         setMonthlyTrendData(monthlyTrend);
