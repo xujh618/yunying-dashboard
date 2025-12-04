@@ -1,0 +1,21 @@
+# Netlify配置文件
+# 构建配置
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "server"
+
+# SPA路由配置
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# 环境变量配置（可选，根据需要添加）
+[context.production]
+  [context.production.environment]
+    NODE_ENV = "production"
+
+[context.deploy-preview]
+  [context.deploy-preview.environment]
+    NODE_ENV = "development"
